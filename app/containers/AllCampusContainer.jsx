@@ -1,3 +1,4 @@
+import React from 'react'
 import { connect } from 'react-redux'
 import AllCampus from '../components/AllCampus'
 import { addCampus } from '../action-creators/campus'
@@ -14,6 +15,36 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const AllCampusContainer = connect(mapStateToProps, mapDispatchToProps)(AllCampus)
+class AllCampusContainer extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      campusName: ''
+    }
+    this.changeHandler = this.changeHandler.bind(this)
+    this.submitHandler = this.submitHandler.bind(this)
+  }
 
-export default AllCampusContainer
+  changeHandler(event) {
+    this.setState({ campusName: event.target.value })
+  }
+
+  submitHandler(event) {
+    event.preventDefault()
+    return this.props.addCampus({ name: this.state.campusName })
+  }
+
+  render() {
+    return (
+      <AllCampus
+        {...this.props}
+        changeHandler={this.changeHandler}
+        submitHandler={this.submitHandler}
+      />
+    )
+  }
+}
+
+const AllCampusConnector = connect(mapStateToProps, mapDispatchToProps)(AllCampusContainer)
+
+export default AllCampusConnector
